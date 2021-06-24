@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
+import Customers from './Customers';
 
 function App() {
   const [customers, setCustomers] = useState(0);
@@ -12,9 +13,7 @@ function App() {
   }, []);
 
   return (
-    <div>
-      {customers.length}
-    </div>
+    <Customers customers={customers} />
   );
 }
 
