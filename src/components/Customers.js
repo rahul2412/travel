@@ -5,34 +5,62 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { TableFooter } from '@material-ui/core';
+import { TablePagination } from '@material-ui/core';
 
 function Customers(props) {
     const customers = props.customers
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = event => {
+        setRowsPerPage(event.target.value);
+        setPage(0);
+    };
+
     return (
         <TableContainer>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Customer name</TableCell>
-                        <TableCell align="left">Email</TableCell>
-                        <TableCell align="left">Phone</TableCell>
-                        <TableCell align="left">Premium</TableCell>
-                        <TableCell align="left">Max/Min bid</TableCell>
+                        <TableCell><b>Customer name</b></TableCell>
+                        <TableCell align="left"><b>Email</b></TableCell>
+                        <TableCell align="left"><b>Phone</b></TableCell>
+                        <TableCell align="left"><b>Premium</b></TableCell>
+                        <TableCell align="left"><b>Max/Min bid</b></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {customers.length > 0 && customers.map((customer) => (
-                        <TableRow key={customer.id}>
-                            <TableCell>{customer.firstname + " " + customer.lastname}&nbsp;&nbsp;&nbsp;
-                                <img src={customer.avatarUrl} alt={"Customer" + customer.id} height={45} width={45} />
-                            </TableCell>
-                            <TableCell align="left">{customer.email}</TableCell>
-                            <TableCell align="left">{customer.phone}</TableCell>
-                            <TableCell align="left">premium</TableCell>
-                            <TableCell align="left">Amount</TableCell>
-                        </TableRow>
-                    ))}
+                    {customers.length > 0 && customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((customer) => (
+                            <TableRow key={customer.id}>
+                                <TableCell>{customer.firstname + " " + customer.lastname}&nbsp;&nbsp;&nbsp;
+                                    <img src={customer.avatarUrl} alt={"Customer" + customer.id} height={45} width={45} />
+                                </TableCell>
+                                <TableCell align="left">{customer.email}</TableCell>
+                                <TableCell align="left">{customer.phone}</TableCell>
+                                <TableCell align="left">{"" + customer.hasPremium}</TableCell>
+                                <TableCell align="left">Amount</TableCell>
+                            </TableRow>
+                        ))}
                 </TableBody>
+                <TableFooter>
+                    <TableRow>
+                        <TablePagination
+                            rowsPerPageOptions={[3, 5, 10]}
+                            colSpan={3}
+                            count={customers.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onChangePage={handleChangePage}
+                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    </TableRow>
+                </TableFooter>
             </Table>
         </TableContainer>
     );
