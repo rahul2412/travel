@@ -22,6 +22,15 @@ function Customers(props) {
         setPage(0);
     };
 
+    const findMaxBid = customer => {
+        let bids = []
+        for (let i = 0; i < customer.bids.length; i++)
+            bids.push(customer.bids[i].amount)
+        bids.sort()
+        if (bids.length === 0) return 0
+        else return bids[bids.length - 1]
+    }
+
     return (
         <TableContainer>
             <Table>
@@ -44,23 +53,25 @@ function Customers(props) {
                                 <TableCell align="left">{customer.email}</TableCell>
                                 <TableCell align="left">{customer.phone}</TableCell>
                                 <TableCell align="left">{"" + customer.hasPremium}</TableCell>
-                                <TableCell align="left">Amount</TableCell>
+                                <TableCell align="left">{findMaxBid(customer)}</TableCell>
                             </TableRow>
                         ))}
                 </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TablePagination
-                            rowsPerPageOptions={[3, 5, 10]}
-                            colSpan={3}
-                            count={customers.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onChangePage={handleChangePage}
-                            onChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    </TableRow>
-                </TableFooter>
+                {customers.length > 0 &&
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                rowsPerPageOptions={[3, 5, 10]}
+                                colSpan={3}
+                                count={customers.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onChangePage={handleChangePage}
+                                onChangeRowsPerPage={handleChangeRowsPerPage}
+                            />
+                        </TableRow>
+                    </TableFooter>
+                }
             </Table>
         </TableContainer>
     );
