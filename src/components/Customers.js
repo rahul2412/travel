@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,11 +7,20 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { TableFooter } from '@material-ui/core';
 import { TablePagination } from '@material-ui/core';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 function Customers(props) {
     const customers = props.customers
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [bid, setBid] = useState('Max');
+
+    const handleBid = (event, newBid) => {
+        setBid(newBid);
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -40,7 +49,21 @@ function Customers(props) {
                         <TableCell align="left"><b>Email</b></TableCell>
                         <TableCell align="left"><b>Phone</b></TableCell>
                         <TableCell align="left"><b>Premium</b></TableCell>
-                        <TableCell align="left"><b>Max/Min bid</b></TableCell>
+                        <TableCell align="left"><b>Max/Min bid</b><br />
+                            <ToggleButtonGroup
+                                value={bid}
+                                exclusive
+                                onChange={handleBid}
+                                aria-label="toggle bid"
+                            >
+                                <ToggleButton value="Max" aria-label="max">
+                                    <ArrowUpwardIcon />
+                                </ToggleButton>
+                                <ToggleButton value="Min" aria-label="min">
+                                    <ArrowDownwardIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
