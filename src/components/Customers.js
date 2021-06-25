@@ -19,7 +19,7 @@ function Customers(props) {
     const [bid, setBid] = useState('Max');
 
     const handleBid = (event, newBid) => {
-        setBid(newBid);
+        if (newBid !== null) setBid(newBid);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -31,72 +31,76 @@ function Customers(props) {
         setPage(0);
     };
 
-    const findMaxBid = customer => {
+    const displayBid = customer => {
         let bids = []
         for (let i = 0; i < customer.bids.length; i++)
             bids.push(customer.bids[i].amount)
         bids.sort()
         if (bids.length === 0) return 0
-        else return bids[bids.length - 1]
+        else if (bid === 'Max') return bids[bids.length - 1]
+        else return bids[0]
     }
 
     return (
-        <TableContainer>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell><b>Customer name</b></TableCell>
-                        <TableCell align="left"><b>Email</b></TableCell>
-                        <TableCell align="left"><b>Phone</b></TableCell>
-                        <TableCell align="left"><b>Premium</b></TableCell>
-                        <TableCell align="left"><b>Max/Min bid</b><br />
-                            <ToggleButtonGroup
-                                value={bid}
-                                exclusive
-                                onChange={handleBid}
-                                aria-label="toggle bid"
-                            >
-                                <ToggleButton value="Max" aria-label="max">
-                                    <ArrowUpwardIcon />
-                                </ToggleButton>
-                                <ToggleButton value="Min" aria-label="min">
-                                    <ArrowDownwardIcon />
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {customers.length > 0 && customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((customer) => (
-                            <TableRow key={customer.id}>
-                                <TableCell>{customer.firstname + " " + customer.lastname}&nbsp;&nbsp;&nbsp;
-                                    <img src={customer.avatarUrl} alt={"Customer" + customer.id} height={45} width={45} />
+        <>
+            {
+                customers.length > 0 &&
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><b>Customer name</b></TableCell>
+                                <TableCell align="left"><b>Email</b></TableCell>
+                                <TableCell align="left"><b>Phone</b></TableCell>
+                                <TableCell align="left"><b>Premium</b></TableCell>
+                                <TableCell align="left"><b>Max/Min bid</b><br />
+                                    <ToggleButtonGroup
+                                        value={bid}
+                                        exclusive
+                                        onChange={handleBid}
+                                        aria-label="toggle bid"
+                                    >
+                                        <ToggleButton value="Max" aria-label="max">
+                                            <ArrowUpwardIcon />
+                                        </ToggleButton>
+                                        <ToggleButton value="Min" aria-label="min">
+                                            <ArrowDownwardIcon />
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
                                 </TableCell>
-                                <TableCell align="left">{customer.email}</TableCell>
-                                <TableCell align="left">{customer.phone}</TableCell>
-                                <TableCell align="left">{"" + customer.hasPremium}</TableCell>
-                                <TableCell align="left">{findMaxBid(customer)}</TableCell>
                             </TableRow>
-                        ))}
-                </TableBody>
-                {customers.length > 0 &&
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[3, 5, 10]}
-                                colSpan={3}
-                                count={customers.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onChangePage={handleChangePage}
-                                onChangeRowsPerPage={handleChangeRowsPerPage}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                }
-            </Table>
-        </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((customer) => (
+                                    <TableRow key={customer.id}>
+                                        <TableCell>{customer.firstname + " " + customer.lastname}&nbsp;&nbsp;&nbsp;
+                                            <img src={customer.avatarUrl} alt={"Customer" + customer.id} height={45} width={45} />
+                                        </TableCell>
+                                        <TableCell align="left">{customer.email}</TableCell>
+                                        <TableCell align="left">{customer.phone}</TableCell>
+                                        <TableCell align="left">{"" + customer.hasPremium}</TableCell>
+                                        <TableCell align="left">{displayBid(customer)}</TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[3, 5, 10]}
+                                    colSpan={3}
+                                    count={customers.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={handleChangePage}
+                                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </TableContainer>
+            }
+        </>
     );
 }
 
